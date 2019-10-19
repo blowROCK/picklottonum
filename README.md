@@ -1,2 +1,3 @@
-# picklootonum
-picklootonum
+# 로또 넘버 생성기
+    -----
+    다양한 조합식을 통해 생성할 예정

@@ -1,0 +1,50 @@
+{
+  "name": "picklootonum",
+  "version": "1.0.0",
+  "description": "pick num for looto",
+  "main": "gulpfile.babel.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blowROCK/picklootonum.git"
+  },
+  "keywords": [
+    "looto"
+  ],
+  "author": "code_dex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blowROCK/picklootonum/issues"
+  },
+  "homepage": "https://github.com/blowROCK/picklootonum#readme",
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.6.2",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
+    "browserslist": "^4.7.0",
+    "del": "^4.1.1",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-bro": "^1.0.3",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.1",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-if": "^3.0.0",
+    "gulp-image": "^4.4.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-pug": "^4.0.1",
+    "gulp-sass": "^4.0.2",
+    "gulp-strip-debug": "^3.0.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-webserver": "^0.9.1",
+    "merge-stream": "^2.0.0",
+    "node-sass": "^4.12.0",
+    "pngquant-bin": "^5.0.2",
+    "run-sequence": "^2.2.1",
+    "uglifyify": "^5.0.1"
+  }
+}
