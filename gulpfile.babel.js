@@ -23,7 +23,9 @@ import gulpif from "gulp-if";
 
 const COMPONENTS = [
   "src/components/jquery/jquery-3.4.1.min.js",
-  "src/components/pagepiling/jquery.pagepiling.js"
+  "src/components/pagepiling/jquery.pagepiling.js",
+  "src/components/sweet/sweet2.min.js",
+  "src/components/sweet/polyfill.js"
 ];
 
 const COMPONENTS_CSS = [

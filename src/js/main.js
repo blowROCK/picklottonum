@@ -1,5 +1,6 @@
 import { random } from "./util";
-import {lotto } from "./lotto";
+import { lotto } from "./lotto";
+
 active();
 
 function active() {
@@ -8,9 +9,50 @@ function active() {
   initModel();
   afterDom();
 }
-function initModel() {}
-function initEvent() {}
+function initModel() {
+  var nomal = new lotto({
+    min: 1,
+    max: 45,
+    leng: 6,
+    combination: {
+      // 합계가 120~160 사이.
+      sumlimit: [120, 160],
 
+      // 22.5를 기준으로 큰숫자, 작은 숫자의 비율 조정. 0~3
+      // EX : 2이면 1:5 ~ 5:1 까지 통과
+      // 0:6 3
+      // 1:5 2
+      // 2:4 1
+      // 3:3 0
+      // 4:2 1
+      // 5:1 2
+      // 6:0 3
+      updown: 1,
+
+      // 홀수 짝수의 비율 0 ~ 3
+      // EX : 2이면 1:5 ~ 5:1 까지 통과
+      oddEven: 1,
+
+      // 1의 자리수를 모두 합한 수가 20~36사이
+      endSum: [20, 36],
+
+      // 연속된 번호 를 제거함.
+      // 4 입력 시  2, 12,13,14,15, 44실패 2~6
+      // 1금지.
+      continueNum: 4,
+      
+      //각 0,10,20,30,40 대에서 4개이상 나오지 않도록.
+      tensRatio: 3
+    }
+  });
+  console.log("TCL: initModel -> nomal", nomal);
+  console.log("TCL: initModel -> nomal.options", nomal.options);
+  console.log("TCL: initModel -> nomal.getNumber", nomal.getNumber);
+  console.log("TCL: initModel -> nomal.lastLottoNumber", nomal.lastLottoNumber);
+}
+function initEvent() {
+  
+}
 function afterDom() {
   $(document).ready(function() {
     console.log("----------afterDom----------");
@@ -26,7 +68,6 @@ function afterDom() {
       loopTop: false,
       loopBottom: false,
       css3: true,
-
       //events
       onLeave: function(index, nextIndex, direction) {},
       afterLoad: function(anchorLink, index) {},
