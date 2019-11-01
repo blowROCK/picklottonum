@@ -1,15 +1,15 @@
-import { random } from "./util";
 import { lotto } from "./lotto";
+import { sweet } from "./util";
 
-active();
 
-function active() {
+
+const active = () => {
   console.log("TCL: active -> active");
   initEvent();
   initModel();
   afterDom();
 }
-function initModel() {
+const initModel = () => {
   var nomal = new lotto({
     min: 1,
     max: 45,
@@ -20,13 +20,6 @@ function initModel() {
 
       // 22.5를 기준으로 큰숫자, 작은 숫자의 비율 조정. 0~3
       // EX : 2이면 1:5 ~ 5:1 까지 통과
-      // 0:6 3
-      // 1:5 2
-      // 2:4 1
-      // 3:3 0
-      // 4:2 1
-      // 5:1 2
-      // 6:0 3
       updown: 1,
 
       // 홀수 짝수의 비율 0 ~ 3
@@ -42,7 +35,12 @@ function initModel() {
       continueNum: 4,
       
       //각 0,10,20,30,40 대에서 4개이상 나오지 않도록.
-      tensRatio: 3
+      tensRatio: 4,
+
+      // 중복 검사 할 것
+      // 고정 숫자, 제외 숫자
+      fixedNum: [1],
+      exceptedNumber: [45]
     }
   });
   console.log("TCL: initModel -> nomal", nomal);
@@ -50,21 +48,23 @@ function initModel() {
   console.log("TCL: initModel -> nomal.getNumber", nomal.getNumber);
   console.log("TCL: initModel -> nomal.lastLottoNumber", nomal.lastLottoNumber);
 }
-function initEvent() {
+const initEvent = () => {
   
 }
-function afterDom() {
+const afterDom = () => {
+  sweet('안뇽');
   $(document).ready(function() {
     console.log("----------afterDom----------");
     $("#pageSection").pagepiling({
       menu: null,
       direction: "vertical",
       verticalCentered: true,
-      scrollingSpeed: 300,
+      scrollingSpeed: 0,
       sectionsColor: ["#f2f2f2", "#4BBFC3", "#7BAABE", "whitesmoke", "#000"],
       anchors: [],
-      easing: "linear", //swing
-
+      easing: "linear", //swing ,easeInQuart, linear
+      // normalScrollElements: ['#sec1', "#sec2", "#sec3", "#sec4"],
+      // normalScrollElementTouchThreshold :1,
       loopTop: false,
       loopBottom: false,
       css3: true,
@@ -75,3 +75,7 @@ function afterDom() {
     });
   });
 }
+
+
+
+active();

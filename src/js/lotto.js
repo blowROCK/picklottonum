@@ -1,5 +1,7 @@
-import { getRndInteger, isInArr, sortNumber } from "./util";
-var loopLimit = 3000;
+import { getRndInteger, isInArr, sortNumber, allPass4Obj } from "./util";
+
+const loopLimit = 3000;
+
 export class lotto {
   constructor(params) {
     this.min = params.min;
@@ -13,7 +15,9 @@ export class lotto {
       oddEven: 1,
       endSum: [20, 36],
       continueNum: 4,
-      tensRatio: 4
+      tensRatio: 4,
+      fixedNum: [],
+      exceptedNumber: []
     };
     const populated = Object.assign(defaults, options);
     for (const key in populated) {
@@ -22,6 +26,92 @@ export class lotto {
       }
     }
     this.lastLotto = [];
+
+    this.getRandomLotto = (fixedNum, exceptedNumber) => {
+      var returnArr = [...fixedNum];
+      var length = this.leng - fixedNum.length;
+      for (let i = 0; i < length; i++) {
+        let num = getRndInteger(this.min, this.max);
+        if (!isInArr(returnArr, num) && exceptedNumber.indexOf(num) == -1)
+          returnArr.push(num);
+        else i--;
+      }
+      return returnArr;
+    };
+
+    this.checkSumlimit = (sumlimit, numberArray) => {
+      let min = sumlimit[0];
+      let max = sumlimit[1];
+      let sum = 0;
+      for (const iterator of numberArray) {
+        sum += iterator;
+      }
+      if (min < sum && sum < max) {
+        return true;
+      }
+      return false;
+    };
+    this.checkUpDown = (updown, numberArray) => {
+      updown *= 2;
+      let minCounter = 0;
+      let maxCounter = 0;
+      for (const iterator of numberArray) {
+        22.5 < iterator ? minCounter++ : maxCounter++;
+      }
+      if (minCounter - maxCounter <= updown) return true;
+      return false;
+    };
+    this.checkOddEven = (oddEven, numberArray) => {
+      oddEven *= 2;
+      let oddCounter = 0;
+      let evenCounter = 0;
+      for (const iterator of numberArray) {
+        iterator % 2 == 0 ? evenCounter++ : oddCounter++;
+      }
+      if (oddCounter - evenCounter <= oddEven) return true;
+      return false;
+    };
+    this.checkEndSum = (endSum, numberArray) => {
+      let min = endSum[0];
+      let max = endSum[1];
+      let sum = 0;
+      for (const iterator of numberArray) {
+        sum += iterator % 10;
+      }
+      if (min < sum && sum < max) {
+        return true;
+      }
+      return false;
+    };
+    this.checkContinueNum = (continueNum, numberArray) => {
+      let counter = 1;
+      for (let i = 0; i < numberArray.length; i++) {
+        const el1 = numberArray[i];
+        const el2 = numberArray[i + 1];
+        if (el2 == undefined) break;
+        if (el1 - el2 == -1) {
+          counter++;
+        } else {
+          counter = 0;
+        }
+        if (counter >= continueNum) break;
+      }
+      if (counter >= continueNum) {
+        return false;
+      }
+      return true;
+    };
+    // console.log( Math.floor(t*0.1) );
+    this.checkTensRatio = (tensRatio, numberArray) => {
+      let arr = [0, 0, 0, 0, 0];
+      for (const iterator of numberArray) {
+        let index = Math.floor(iterator * 0.1);
+        arr[index]++;
+      }
+      return arr.every(function(element) {
+        return element < tensRatio;
+      });
+    };
   }
   get options() {
     return {
@@ -42,24 +132,23 @@ export class lotto {
     var counter = 0;
     while (notDone) {
       if (loopLimit < counter) return false; // 에러메시지 써줄것.
-      var returnArr = [];
-      for (let i = 0; i < this.leng; i++) {
-        let num = getRndInteger(this.min, this.max);
-        if (!isInArr(returnArr, num)) returnArr.push(num);
-        else i--;
-      }
+      var returnArr = this.getRandomLotto(
+        this.combination.fixedNum,
+        this.combination.exceptedNumber
+      );
+
       let tempNumbers = sortNumber(returnArr);
       let ispass = {
-        sum: checkSumlimit(this.combination.sumlimit, tempNumbers),
-        updown: checkUpDown(this.combination.updown, tempNumbers),
-        oddEven: checkOddEven(this.combination.oddEven, tempNumbers),
-        endSum: checkEndSum(this.combination.endSum, tempNumbers),
-        continueNum: checkContinueNum(this.combination.continueNum, tempNumbers),
-        tensRatio: checkTensRatio(this.combination.tensRatio, tempNumbers)
-
-        
+        sum: this.checkSumlimit(this.combination.sumlimit, tempNumbers),
+        updown: this.checkUpDown(this.combination.updown, tempNumbers),
+        oddEven: this.checkOddEven(this.combination.oddEven, tempNumbers),
+        endSum: this.checkEndSum(this.combination.endSum, tempNumbers),
+        continueNum: this.checkContinueNum(
+          this.combination.continueNum,
+          tempNumbers
+        ),
+        tensRatio: this.checkTensRatio(this.combination.tensRatio, tempNumbers)
       };
-      console.log("TCL: getgetNumber -> ispass", ispass);
       if (allPass4Obj(ispass)) {
         notDone = false;
         this.lastLotto = tempNumbers;
@@ -72,94 +161,3 @@ export class lotto {
     return this.lastLotto;
   }
 }
-const checkSumlimit = (sumlimit, numberArray) => {
-  let min = sumlimit[0];
-  let max = sumlimit[1];
-  let sum = 0;
-  for (const iterator of numberArray) {
-    sum += iterator;
-  }
-  if (min < sum && sum < max) {
-    return true;
-  }
-  return false;
-};
-const checkUpDown = (updown, numberArray) => {
-  updown *= 2;
-  let minCounter = 0;
-  let maxCounter = 0;
-  for (const iterator of numberArray) {
-    22.5 < iterator ? minCounter++ : maxCounter++;
-  }
-  if (minCounter - maxCounter <= updown) return true;
-  return false;
-};
-const checkOddEven = (oddEven, numberArray) => {
-  oddEven *= 2;
-  let oddCounter = 0;
-  let evenCounter = 0;
-  for (const iterator of numberArray) {
-    iterator % 2 == 0 ? evenCounter++ : oddCounter++;
-  }
-  if (oddCounter - evenCounter <= oddEven) return true;
-  return false;
-};
-const checkEndSum = (endSum, numberArray) => {
-  let min = endSum[0];
-  let max = endSum[1];
-  let sum = 0;
-  for (const iterator of numberArray) {
-    sum += iterator % 10;
-  }
-  if (min < sum && sum < max) {
-    return true;
-  }
-  return false;
-};
-const checkContinueNum = (continueNum, numberArray) => {
-  let counter = 1;
-  for (let i = 0; i < numberArray.length; i++) {
-    const el1 = numberArray[i];
-    const el2 = numberArray[i + 1];
-    if (el2 == undefined) break;
-    if (el1 - el2 == -1) {
-      counter++;
-    } else {
-      counter = 0;
-    }
-    if (counter >= continueNum) break;
-  }
-  if (counter >= continueNum) {
-    return false;
-  }
-  return true;
-};
-// console.log( Math.floor(t*0.1) );
-const checkTensRatio = (tensRatio, numberArray) => {
-  let arr = [0,0,0,0,0]
-  for (const iterator of numberArray) {
-    let index = Math.floor(iterator*0.1);
-    arr[index]++;
-  }
-  return arr.every(function(element) {
-    return element < tensRatio;
-  });
-}
-// 유틸로 옮기던지
-function allPass4Obj(object) {
-  for (const key in object) {
-    if (object.hasOwnProperty(key) && !object[key])
-      return false;
-  }
-  return true;
-}
-// sum : 합계분석
-// upDown : 고저 비율
-// OddEven : 홀짝 비율
-// endSum: 끝자리 합계
-// continueNum : 연속 번호 제거
-// tensRatio : 0, 10, 20, 30, 40 번에서 4개 이상 나오지 않도록 제거
-
-// 고정번호 넣기
-// 제외번호 넣기
-// 경고 넣기
